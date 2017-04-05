@@ -1,8 +1,12 @@
 # internode
 
-## set(key,value)
-`set('john','{age:32,home:"San Francisco"}')`
+## set(key, value)
+`set('john@gmail.com', '{visits:3, address:"San Francisco"}')`
 
 ## get(key)
+```
+get('john@gmail.com')
+--> {}
+```
 
 ## use(app)
