@@ -1,7 +1,8 @@
 # internode
 
-## set
+## set(key,value)
+set('john','{age:32,home:"San Francisco"}')
 
-## get
+## get(key)
 
-## use
+## use(app)
