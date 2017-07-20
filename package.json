@@ -1,0 +1,25 @@
+{
+  "name": "internode",
+  "version": "0.0.1",
+  "description": "inter-node communication",
+  "main": "internode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/odedhb/internode.git"
+  },
+  "keywords": [
+    "inter-node",
+    "communication",
+    "in-memory",
+    "database"
+  ],
+  "author": "Oded Breiner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/odedhb/internode/issues"
+  },
+  "homepage": "https://github.com/odedhb/internode#readme"
+}
