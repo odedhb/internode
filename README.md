@@ -10,8 +10,8 @@ let app = express();
 require('internode').InterNode.init(app, 'https://domain.com');
 ```
 
-## set(key, value)
-`set('john@gmail.com', '{visits:3, address:"San Francisco"}')`
+## set(key: string, value: string, expire?: number)
+`Internode.set('john@gmail.com', 'John Doe', 3600000)`
 
 ## get(key)
 ```
