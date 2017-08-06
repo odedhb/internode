@@ -13,10 +13,10 @@ require('internode').InterNode.init(app, 'https://domain.com');
 ## set(key: string, value: string, expire?: number)
 `Internode.set('john@gmail.com', 'John Doe', 3600000)`
 
-## get(key)
+## get(key: string)
 ```
-get('john@gmail.com')
---> {}
+InterNode.get('john@gmail.com')
+--> 'John Doe'
 ```
 
-## use(app)
+## aggregate(key: string, value: number, expire: number)
