@@ -20,3 +20,12 @@ InterNode.get('john@gmail.com')
 ```
 
 ## aggregate(key: string, value: number, expire: number)
+`InterNode.aggregate('account_dollar_balance', 257, 3600000);`
+`InterNode.aggregate('account_dollar_balance', 129, 3600000);`
+
+## getAggregated(key: string)
+```
+InterNode.getAggregated('account_dollar_balance');
+--> 386
+```
+
