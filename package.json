@@ -4,7 +4,7 @@
   "description": "inter-node communication",
   "main": "internode.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/odedhb/internode/issues"
   },
-  "homepage": "https://github.com/odedhb/internode#readme"
+  "homepage": "https://github.com/odedhb/internode#readme",
+  "dependencies": {
+    "request": "^2.81.0"
+  }
 }
