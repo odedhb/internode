@@ -4,9 +4,11 @@ const internode_1 = require("./internode");
 class TestApp {
     get(syncPath, callback) {
         console.log('app init ' + syncPath);
-        this.syncCallback = callback;
+        TestApp.syncCallback = callback;
         let req = { query: { node_id: 3 } };
-        this.syncCallback(req, new TestResponse());
+        setInterval(() => {
+            TestApp.syncCallback(req, new TestResponse());
+        }, 1000);
     }
 }
 class TestResponse {
@@ -26,4 +28,5 @@ if (internode_1.InterNode.get('test1') == `1`) {
     console.log('get() success');
 }
 ////
+new TestApp();
 //# sourceMappingURL=test.js.map

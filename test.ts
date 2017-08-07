@@ -2,13 +2,16 @@ import {InterNode} from "./internode";
 
 
 class TestApp {
-    syncCallback: any;
+    static syncCallback: any;
 
     get(syncPath: string, callback: any) {
         console.log('app init ' + syncPath);
-        this.syncCallback = callback;
+        TestApp.syncCallback = callback;
         let req = {query: {node_id: 3}};
-        this.syncCallback(req, new TestResponse());
+
+        setInterval(() => {
+            TestApp.syncCallback(req, new TestResponse())
+        }, 1000);
     }
 }
 
@@ -30,3 +33,4 @@ if (InterNode.get('test1') == `1`) {
     console.log('get() success');
 }
 ////
+new TestApp();
