@@ -1,4 +1,5 @@
 import {InterNode} from "./internode";
+
 /**
  * Created by oded on 6/5/17.
  */
@@ -9,9 +10,14 @@ export class DataStore {
     items: any;
     private static ITEMS_TO_SYNC_EACH_TIME = 100;
 
+    //Where did each sync stop when trying to send data to each node
+    //This is to make sure that nodes have all the items before they update an old item
+    private nodeSyncIndex: Map<string, number>;
+
     constructor(nodeID: string) {
         this.items = {};
         this.node_id = nodeID;
+        this.nodeSyncIndex = new Map();
     }
 
     itemCount() {
@@ -38,7 +44,7 @@ export class DataStore {
 
     get(key: string): any {
         let item = this.items[key];
-        if (!item)return null;
+        if (!item) return null;
         return item.value;
     }
 
@@ -67,7 +73,7 @@ export class DataStore {
         let aggregatedItemValue: number = 0;
         let shardsMessage = '';
         for (let itemKey in this.items) {
-            if (!this.items.hasOwnProperty(itemKey))continue;
+            if (!this.items.hasOwnProperty(itemKey)) continue;
 
             if (itemKey.startsWith(key)) {
                 let item = this.items[itemKey];
@@ -88,9 +94,19 @@ export class DataStore {
     getDataStoreDiff(nodeId: string): any {
         let diffItems: any = {};
         let itemCount = 0;
+        let itemIndex = 0;
 
         for (let key in this.items) {
-            if (!this.items.hasOwnProperty(key))continue;
+            if (!this.items.hasOwnProperty(key)) continue;
+
+            if (this.nodeSyncIndex.get(nodeId) && itemIndex < this.nodeSyncIndex.get(nodeId)) {
+                //if this index location was already synced to that domain, skip it
+                itemIndex++;
+                continue;
+            } else {
+                this.nodeSyncIndex.set(nodeId, itemIndex);
+                itemIndex++;
+            }
 
             let item = this.items[key];
 
@@ -130,12 +146,12 @@ export class DataStore {
         }
 
         for (let remoteItemKey in remoteItems) {
-            if (!remoteItems.hasOwnProperty(remoteItemKey))continue;
+            if (!remoteItems.hasOwnProperty(remoteItemKey)) continue;
 
             let remoteItem = remoteItems[remoteItemKey];
 
             //get rid of corrupted items that don't have data in them
-            if (!remoteItem.value)continue;
+            if (!remoteItem.value) continue;
 
             let localItem = this.items[remoteItemKey];
 

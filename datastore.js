@@ -9,6 +9,7 @@ class DataStore {
     constructor(nodeID) {
         this.items = {};
         this.node_id = nodeID;
+        this.nodeSyncIndex = new Map();
     }
     itemCount() {
         return Object.keys(this.items).length;
@@ -76,9 +77,19 @@ class DataStore {
     getDataStoreDiff(nodeId) {
         let diffItems = {};
         let itemCount = 0;
+        let itemIndex = 0;
         for (let key in this.items) {
             if (!this.items.hasOwnProperty(key))
                 continue;
+            if (this.nodeSyncIndex.get(nodeId) && itemIndex < this.nodeSyncIndex.get(nodeId)) {
+                //if this index location was already synced to that domain, skip it
+                itemIndex++;
+                continue;
+            }
+            else {
+                this.nodeSyncIndex.set(nodeId, itemIndex);
+                itemIndex++;
+            }
             let item = this.items[key];
             //delete item if expired
             if (!item.expire || item.expire < Date.now()) {
