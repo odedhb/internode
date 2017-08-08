@@ -96,8 +96,10 @@ export class DataStore {
         let diffItemCount = 0;
         let itemIndex = 0;
 
-        if (this.itemCount() < this.nodeSyncIndex.get(nodeId)) {
-            this.nodeSyncIndex.set(nodeId, null);
+
+        //reset the index if we're done with all of the items
+        if (this.nodeSyncIndex.get(nodeId) >= this.itemCount()) {
+            this.nodeSyncIndex.set(nodeId, 0);
         }
 
         for (let key in this.items) {
