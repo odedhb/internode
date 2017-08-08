@@ -93,8 +93,12 @@ export class DataStore {
 
     getDataStoreDiff(nodeId: string): any {
         let diffItems: any = {};
-        let itemCount = 0;
+        let diffItemCount = 0;
         let itemIndex = 0;
+
+        if (this.itemCount() < this.nodeSyncIndex.get(nodeId)) {
+            this.nodeSyncIndex.set(nodeId, null);
+        }
 
         for (let key in this.items) {
             if (!this.items.hasOwnProperty(key)) continue;
@@ -119,10 +123,10 @@ export class DataStore {
             if (item.synced_nodes.indexOf(nodeId) == -1) {
                 diffItems[key] = item;
                 item.synced_nodes.push(nodeId);
-                itemCount++;
+                diffItemCount++;
             }
 
-            if (itemCount >= DataStore.ITEMS_TO_SYNC_EACH_TIME) {
+            if (diffItemCount >= DataStore.ITEMS_TO_SYNC_EACH_TIME) {
                 break;
             }
         }
