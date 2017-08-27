@@ -9,6 +9,7 @@ class DataStore {
     constructor(nodeID) {
         this.items = {};
         this.node_id = nodeID;
+        this.nodes = [];
     }
     itemCount() {
         return Object.keys(this.items).length;
