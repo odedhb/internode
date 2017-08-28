@@ -1,5 +1,6 @@
 import {InterNode} from "./internode";
 import {DataStore} from "./datastore";
+
 /**
  * Created by oded on 6/5/17.
  */
@@ -8,12 +9,15 @@ export class Synchronizer {
     private syncPath: string;
     private nodeID: string;
     private dataStore: DataStore;
+    private liveNodes: Map<string, number>;
 
     constructor(syncInterval: number, hosts: string[], syncPath: string, nodeID: string, dataStore: DataStore) {
         this.hosts = hosts;
         this.syncPath = syncPath;
         this.nodeID = nodeID;
         this.dataStore = dataStore;
+        this.liveNodes = new Map();
+
         setInterval(() => {
             this.sync();
         }, syncInterval);
@@ -53,7 +57,12 @@ export class Synchronizer {
 
     //does this node have fresh data for the requesting node?
     isFreshData(req: any) {
-        if (req.query.node_id === InterNode.nodeID) {
+        let nodeID = req.query.node_id;
+        this.liveNodes.set(nodeID, Date.now());
+
+        InterNode.log('liveNodes: ' + JSON.stringify(this.liveNodes));
+
+        if (nodeID === InterNode.nodeID) {
             InterNode.log('do not sync: same server');
             return false;
         } else if (Object.keys(this.dataStore.items).length < 1) {

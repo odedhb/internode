@@ -10,6 +10,7 @@ class Synchronizer {
         this.syncPath = syncPath;
         this.nodeID = nodeID;
         this.dataStore = dataStore;
+        this.liveNodes = new Map();
         setInterval(() => {
             this.sync();
         }, syncInterval);
@@ -43,7 +44,10 @@ class Synchronizer {
     }
     //does this node have fresh data for the requesting node?
     isFreshData(req) {
-        if (req.query.node_id === internode_1.InterNode.nodeID) {
+        let nodeID = req.query.node_id;
+        this.liveNodes.set(nodeID, Date.now());
+        internode_1.InterNode.log('liveNodes: ' + JSON.stringify(this.liveNodes));
+        if (nodeID === internode_1.InterNode.nodeID) {
             internode_1.InterNode.log('do not sync: same server');
             return false;
         }

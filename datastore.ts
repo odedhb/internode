@@ -8,13 +8,11 @@ import {InterNode} from "./internode";
 export class DataStore {
     node_id: string;
     items: any;
-    nodes: string[];
     private static ITEMS_TO_SYNC_EACH_TIME = 100;
 
     constructor(nodeID: string) {
         this.items = {};
         this.node_id = nodeID;
-        this.nodes = [];
     }
 
     itemCount() {
