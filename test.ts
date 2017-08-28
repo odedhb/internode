@@ -9,6 +9,10 @@ class TestApp {
         TestApp.syncCallback = callback;
         let req = {query: {node_id: 3}};
 
+        InterNode.setLogHandler((message) => {
+            console.log(message);
+        });
+
         setInterval(() => {
             TestApp.syncCallback(req, new TestResponse())
         }, 1000);

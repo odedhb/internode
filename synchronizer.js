@@ -6,11 +6,12 @@ const internode_1 = require("./internode");
  */
 class Synchronizer {
     constructor(syncInterval, hosts, syncPath, nodeID, dataStore) {
+        this.liveNodes = {};
         this.hosts = hosts;
         this.syncPath = syncPath;
         this.nodeID = nodeID;
         this.dataStore = dataStore;
-        this.liveNodes = new Map();
+        this.liveNodes = {};
         setInterval(() => {
             this.sync();
         }, syncInterval);
@@ -45,7 +46,7 @@ class Synchronizer {
     //does this node have fresh data for the requesting node?
     isFreshData(req) {
         let nodeID = req.query.node_id;
-        this.liveNodes.set(nodeID, Date.now());
+        this.liveNodes[nodeID] = Date.now();
         internode_1.InterNode.log('liveNodes: ' + JSON.stringify(this.liveNodes));
         if (nodeID === internode_1.InterNode.nodeID) {
             internode_1.InterNode.log('do not sync: same server');

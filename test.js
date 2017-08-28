@@ -6,6 +6,9 @@ class TestApp {
         console.log('app init ' + syncPath);
         TestApp.syncCallback = callback;
         let req = { query: { node_id: 3 } };
+        internode_1.InterNode.setLogHandler((message) => {
+            console.log(message);
+        });
         setInterval(() => {
             TestApp.syncCallback(req, new TestResponse());
         }, 1000);
