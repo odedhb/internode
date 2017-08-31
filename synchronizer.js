@@ -6,15 +6,34 @@ const internode_1 = require("./internode");
  */
 class Synchronizer {
     constructor(syncInterval, hosts, syncPath, nodeID, dataStore) {
-        this.liveNodes = {};
+        this.nodesSyncTime = {};
         this.hosts = hosts;
         this.syncPath = syncPath;
         this.nodeID = nodeID;
         this.dataStore = dataStore;
-        this.liveNodes = {};
+        this.nodesSyncTime = {};
         setInterval(() => {
             this.sync();
         }, syncInterval);
+    }
+    getItemPartition(itemKey) {
+        let nodeLifeSpan = 300000;
+        let activeNodes = [];
+        for (let key in this.nodesSyncTime) {
+            if (this.nodesSyncTime.hasOwnProperty(key)) {
+                let lastSync = this.nodesSyncTime[key];
+                if (lastSync > (Date.now() - nodeLifeSpan)) {
+                    activeNodes.push(key);
+                }
+            }
+        }
+        let nodeCount = activeNodes.length;
+        let thisNodesNumber = activeNodes.indexOf(this.nodeID);
+        let itemKeyHash = itemKey.length; //todo: change this to an efficient hash function
+        if (itemKeyHash % nodeCount == thisNodesNumber) {
+            return true;
+        }
+        return false;
     }
     sync() {
         let randomHost = this.hosts[Math.floor(Math.random() * this.hosts.length)];
@@ -46,8 +65,8 @@ class Synchronizer {
     //does this node have fresh data for the requesting node?
     isFreshData(req) {
         let nodeID = req.query.node_id;
-        this.liveNodes[nodeID] = Date.now();
-        internode_1.InterNode.log('liveNodes: ' + JSON.stringify(this.liveNodes));
+        this.nodesSyncTime[nodeID] = Date.now();
+        internode_1.InterNode.log('nodesSyncTime: ' + JSON.stringify(this.nodesSyncTime));
         if (nodeID === internode_1.InterNode.nodeID) {
             internode_1.InterNode.log('do not sync: same server');
             return false;

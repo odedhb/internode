@@ -9,14 +9,35 @@ export class Synchronizer {
     private syncPath: string;
     private nodeID: string;
     private dataStore: DataStore;
-    private liveNodes: { [key: string]: number; } = {};
+    private nodesSyncTime: { [key: string]: number; } = {};
+
+    getItemPartition(itemKey: string): boolean {
+        let nodeLifeSpan = 300000;
+        let activeNodes = [];
+        for (let key in this.nodesSyncTime) {
+            if (this.nodesSyncTime.hasOwnProperty(key)) {
+                let lastSync = this.nodesSyncTime[key];
+                if (lastSync > (Date.now() - nodeLifeSpan)) {
+                    activeNodes.push(key);
+                }
+            }
+        }
+        let nodeCount = activeNodes.length;
+
+        let thisNodesNumber = activeNodes.indexOf(this.nodeID);
+        let itemKeyHash = itemKey.length;//todo: change this to an efficient hash function
+        if (itemKeyHash % nodeCount == thisNodesNumber) {
+            return true;
+        }
+        return false;
+    }
 
     constructor(syncInterval: number, hosts: string[], syncPath: string, nodeID: string, dataStore: DataStore) {
         this.hosts = hosts;
         this.syncPath = syncPath;
         this.nodeID = nodeID;
         this.dataStore = dataStore;
-        this.liveNodes = {};
+        this.nodesSyncTime = {};
 
         setInterval(() => {
             this.sync();
@@ -59,9 +80,9 @@ export class Synchronizer {
     isFreshData(req: any) {
         let nodeID = req.query.node_id;
 
-        this.liveNodes[nodeID] = Date.now();
+        this.nodesSyncTime[nodeID] = Date.now();
 
-        InterNode.log('liveNodes: ' + JSON.stringify(this.liveNodes));
+        InterNode.log('nodesSyncTime: ' + JSON.stringify(this.nodesSyncTime));
 
         if (nodeID === InterNode.nodeID) {
             InterNode.log('do not sync: same server');
