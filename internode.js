@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const synchronizer_1 = require("./synchronizer");
 const datastore_1 = require("./datastore");
+const stats_1 = require("./stats");
 /**
  * Created by oded on 5/3/17.
  */
@@ -16,6 +17,7 @@ class InterNode {
         let syncPath = '/sync';
         InterNode.synchronizer = new synchronizer_1.Synchronizer(InterNode.SYNC_INTERVAL, hosts, syncPath, InterNode.nodeID, InterNode.dataStore);
         app.get(syncPath, InterNode.receiveHttpGet());
+        app.get('/internode', stats_1.Stats.showStats());
     }
     static itemCount() {
         return InterNode.dataStore.itemCount();

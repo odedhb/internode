@@ -1,5 +1,7 @@
 import {Synchronizer} from "./synchronizer";
 import {DataStore} from "./datastore";
+import {Stats} from "./stats";
+
 /**
  * Created by oded on 5/3/17.
  */
@@ -21,6 +23,7 @@ export class InterNode {
         let syncPath = '/sync';
         InterNode.synchronizer = new Synchronizer(InterNode.SYNC_INTERVAL, hosts, syncPath, InterNode.nodeID, InterNode.dataStore);
         app.get(syncPath, InterNode.receiveHttpGet());
+        app.get('/internode', Stats.showStats());
     }
 
 

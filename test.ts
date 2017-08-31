@@ -1,4 +1,5 @@
 import {InterNode} from "./internode";
+import {Stats} from "./stats";
 
 
 class TestApp {
@@ -15,6 +16,7 @@ class TestApp {
 
         setInterval(() => {
             TestApp.syncCallback(req, new TestResponse())
+            console.log(Stats.stats());
         }, 1000);
     }
 }

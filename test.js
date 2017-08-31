@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const internode_1 = require("./internode");
+const stats_1 = require("./stats");
 class TestApp {
     get(syncPath, callback) {
         console.log('app init ' + syncPath);
@@ -11,6 +12,7 @@ class TestApp {
         });
         setInterval(() => {
             TestApp.syncCallback(req, new TestResponse());
+            console.log(stats_1.Stats.stats());
         }, 1000);
     }
 }
