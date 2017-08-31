@@ -9,14 +9,12 @@ export class Synchronizer {
     private syncPath: string;
     private nodeID: string;
     private dataStore: DataStore;
-    private liveNodes: { [key: string]: number; } = {};
 
     constructor(syncInterval: number, hosts: string[], syncPath: string, nodeID: string, dataStore: DataStore) {
         this.hosts = hosts;
         this.syncPath = syncPath;
         this.nodeID = nodeID;
         this.dataStore = dataStore;
-        this.liveNodes = {};
 
         setInterval(() => {
             this.sync();
@@ -58,10 +56,6 @@ export class Synchronizer {
     //does this node have fresh data for the requesting node?
     isFreshData(req: any) {
         let nodeID = req.query.node_id;
-
-        this.liveNodes[nodeID] = Date.now();
-
-        InterNode.log('liveNodes: ' + JSON.stringify(this.liveNodes));
 
         if (nodeID === InterNode.nodeID) {
             InterNode.log('do not sync: same server');
